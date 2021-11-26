@@ -1,22 +1,24 @@
 import React from "react";
 import NoteCard from "./NoteCard";
 
-const NoteList = ({notes}) => {
+class NoteList extends React.Component {
+  render() {
     return (
-        <div>
-            {
-                notes.map((note, i) => {
-                return (
-                    <NoteCard
-                        key={i}
-                        name={note.name}
-                        data={note.data}
-                    />
-                );
-                })
-            }
-        </div>
+      <div>
+        {this.props.notes.map((note, i) => {
+          return (
+            <NoteCard
+              key={i}
+              id={note.id}
+              name={note.name}
+              data={note.data}
+              onNoteDelete={this.props.onNoteDelete}
+            />
+          );
+        })}
+      </div>
     );
+  }
 }
 
 export default NoteList;
