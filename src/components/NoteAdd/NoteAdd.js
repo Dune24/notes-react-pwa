@@ -72,11 +72,11 @@ class NoteAdd extends React.Component {
               maxLength="1000"
             ></textarea>
             <div
-              className="mt4"
-              style={{ display: "flex", justifyContent: "space-evenly" }}
+              className="mt4 flex"
+              style={{ justifyContent: "space-evenly" }}
             >
               <button
-                className="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
+                className="b pa2 grow pointer hover-white w-40 bg-light-green b--black-20"
                 onClick={this.onSave}
               >
                 Save

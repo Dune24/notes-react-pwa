@@ -13,6 +13,7 @@ class NoteList extends React.Component {
               name={note.name}
               data={note.data}
               onNoteDelete={this.props.onNoteDelete}
+              onNoteUpdate={this.props.onNoteUpdate}
             />
           );
         })}

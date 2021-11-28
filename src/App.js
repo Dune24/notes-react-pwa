@@ -32,9 +32,22 @@ class App extends Component {
     });
   };
 
-  onNoteDelete = (idToDelete) => {
+  onNoteUpdate = (noteToUpdate) => {
+    let newNotesArray = [];
+
+    for (let note of this.state.notesArray) {
+      if (note.id === noteToUpdate.id) {
+        newNotesArray.push(noteToUpdate);
+      } else {
+        newNotesArray.push(note);
+      }
+    }
+    this.setState({ notesArray: newNotesArray });
+  };
+
+  onNoteDelete = (noteIdToDelete) => {
     const newNotesArray = this.state.notesArray.filter((note) => {
-      return note.id !== idToDelete;
+      return note.id !== noteIdToDelete;
     });
     this.setState({ notesArray: newNotesArray });
   };
@@ -43,7 +56,7 @@ class App extends Component {
     const { isModalOpen, notesArray, noteId } = this.state;
     return (
       <div className="App">
-        <header className="App-header tc">
+        <header className="tc">
           <h1 className="f1">Notes</h1>
           <button onClick={this.toggleModal}>Add Note</button>
         </header>
@@ -58,7 +71,11 @@ class App extends Component {
           </Modal>
         )}
         <div>
-          <NoteList notes={notesArray} onNoteDelete={this.onNoteDelete} />
+          <NoteList
+            notes={notesArray}
+            onNoteDelete={this.onNoteDelete}
+            onNoteUpdate={this.onNoteUpdate}
+          />
         </div>
       </div>
     );
