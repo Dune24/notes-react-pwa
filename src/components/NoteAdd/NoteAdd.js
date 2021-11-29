@@ -12,7 +12,7 @@ class NoteAdd extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ id: this.props.id + 1 });
+    this.setState({ id: this.props.id });
   }
 
   onInputChange = (event) => {
