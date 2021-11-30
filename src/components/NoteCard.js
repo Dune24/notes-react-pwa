@@ -22,6 +22,7 @@ class NoteCard extends React.Component {
 
   deleteNote = () => {
     this.props.onNoteDelete(this.state.id);
+    console.log(this.state.id);
   };
 
   updateNote = () => {

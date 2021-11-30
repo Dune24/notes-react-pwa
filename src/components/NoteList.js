@@ -5,10 +5,10 @@ class NoteList extends React.Component {
   render() {
     return (
       <div>
-        {this.props.notes.map((note, i) => {
+        {this.props.notes.map((note) => {
           return (
             <NoteCard
-              key={i}
+              key={note.id}
               id={note.id}
               name={note.name}
               data={note.data}

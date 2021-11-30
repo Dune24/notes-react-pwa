@@ -24,11 +24,13 @@ class App extends Component {
   loadNotesFromLocalStorage = () => {
     if (localStorage.length !== 0) {
       let arrayWithOldNotes = [];
-      Object.keys(localStorage).forEach((key, i) => {
+      Object.keys(localStorage).forEach((key) => {
+        let retrievedLocalStObj = localStorage.getItem(key);
+        let parsedLocalStObj = JSON.parse(retrievedLocalStObj);
         arrayWithOldNotes.push({
-          id: localStorage.getItem(key).slice(-1),
-          name: localStorage.getItem(key).split(",")[0],
-          data: localStorage.getItem(key).split(",")[1],
+          id: parsedLocalStObj.id,
+          name: parsedLocalStObj.name,
+          data: parsedLocalStObj.data,
           renderNote: true,
         });
       });
@@ -55,11 +57,15 @@ class App extends Component {
       noteId: note.id + 1,
       isModalOpen: false,
     });
-    localStorage.setItem(`Note ${this.state.noteId}`, [
-      note.name,
-      note.data,
-      `id: ${this.state.noteId}`,
-    ]);
+    let localStObj = {
+      name: note.name,
+      data: note.data,
+      id: this.state.noteId,
+    };
+    localStorage.setItem(
+      `Note ${this.state.noteId}`,
+      JSON.stringify(localStObj)
+    );
   };
 
   onNoteUpdate = (noteToUpdate) => {
@@ -72,18 +78,33 @@ class App extends Component {
         newNotesArray.push(this.state.notesArray[i]);
       }
     }
-    localStorage.setItem(`Note ${noteToUpdate.id}`, [
-      noteToUpdate.name,
-      noteToUpdate.data,
-      `id:${noteToUpdate.id}`,
-    ]);
+    let localStObj = {
+      name: noteToUpdate.name,
+      data: noteToUpdate.data,
+      id: noteToUpdate.id,
+    };
+    localStorage.setItem(`Note ${noteToUpdate.id}`, JSON.stringify(localStObj));
+
     this.setState({ notesArray: newNotesArray });
   };
 
   onNoteDelete = (noteIdToDelete) => {
-    localStorage.removeItem(`Note ${noteIdToDelete}`);
-    let newNotesArray = [...this.state.notesArray];
-    delete newNotesArray[noteIdToDelete];
+    Object.keys(localStorage).forEach((note) => {
+      let retrievedLocalStObj = localStorage.getItem(note);
+      let parsedLocalStObj = JSON.parse(retrievedLocalStObj);
+
+      if (noteIdToDelete === parsedLocalStObj.id) {
+        localStorage.removeItem(note);
+      }
+    });
+    const newNotesArray = this.state.notesArray.filter((note) => {
+      return note.id !== noteIdToDelete;
+    });
+    newNotesArray.forEach((note, index) => {
+      if (index > noteIdToDelete) {
+        return note.id++;
+      }
+    });
     this.setState({ notesArray: newNotesArray });
   };
 
