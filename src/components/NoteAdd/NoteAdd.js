@@ -14,7 +14,6 @@ class NoteAdd extends React.Component {
   componentDidMount() {
     let lastNoteId = this.getLastNoteIdOnLocalStorage();
     this.setState({ id: lastNoteId + 1 });
-    console.log(lastNoteId);
   }
 
   getLastNoteIdOnLocalStorage = () => {
