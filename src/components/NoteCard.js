@@ -83,7 +83,6 @@ class NoteCard extends React.Component {
               }}
             >
               {this.state.data}
-              Propid={this.props.id}, CardStateId={this.state.id}
             </p>
           </>
         ) : (
