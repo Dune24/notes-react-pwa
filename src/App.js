@@ -60,12 +60,9 @@ class App extends Component {
     let localStObj = {
       name: note.name,
       data: note.data,
-      id: this.state.noteId,
+      id: note.id,
     };
-    localStorage.setItem(
-      `Note ${this.state.noteId}`,
-      JSON.stringify(localStObj)
-    );
+    localStorage.setItem(`Note ${note.id}`, JSON.stringify(localStObj));
   };
 
   onNoteUpdate = (noteToUpdate) => {
@@ -99,11 +96,6 @@ class App extends Component {
     });
     const newNotesArray = this.state.notesArray.filter((note) => {
       return note.id !== noteIdToDelete;
-    });
-    newNotesArray.forEach((note, index) => {
-      if (index > noteIdToDelete) {
-        return note.id++;
-      }
     });
     this.setState({ notesArray: newNotesArray });
   };

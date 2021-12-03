@@ -12,8 +12,23 @@ class NoteAdd extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ id: this.props.id });
+    let lastNoteId = this.getLastNoteIdOnLocalStorage();
+    this.setState({ id: lastNoteId + 1 });
+    console.log(lastNoteId);
   }
+
+  getLastNoteIdOnLocalStorage = () => {
+    let largestNum = 0;
+    Object.keys(localStorage).forEach((key) => {
+      let retrievedLocalStObj = localStorage.getItem(key);
+      let parsedLocalStObj = JSON.parse(retrievedLocalStObj);
+
+      if (parsedLocalStObj.id > largestNum) {
+        largestNum = parsedLocalStObj.id;
+      }
+    });
+    return largestNum;
+  };
 
   onInputChange = (event) => {
     switch (event.target.name) {
