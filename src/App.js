@@ -17,6 +17,33 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    this.loadNotesFromLocalStorage();
+  }
+
+  loadNotesFromLocalStorage = () => {
+    if (localStorage.length !== 0) {
+      let arrayWithOldNotes = [];
+      Object.keys(localStorage).forEach((key) => {
+        let retrievedLocalStObj = localStorage.getItem(key);
+        let parsedLocalStObj = JSON.parse(retrievedLocalStObj);
+        arrayWithOldNotes.push({
+          id: parsedLocalStObj.id,
+          name: parsedLocalStObj.name,
+          data: parsedLocalStObj.data,
+          renderNote: true,
+        });
+      });
+      arrayWithOldNotes.sort((a, b) => parseFloat(a.id) - parseFloat(b.id));
+      this.setState({
+        notesArray: arrayWithOldNotes,
+        noteId: arrayWithOldNotes.length,
+      });
+    } else {
+      return;
+    }
+  };
+
   toggleModal = () => {
     this.setState((state) => ({
       ...state,
@@ -27,25 +54,46 @@ class App extends Component {
   onNoteSave = (note) => {
     this.setState({
       notesArray: [...this.state.notesArray, note],
-      noteId: note.id,
+      noteId: note.id + 1,
       isModalOpen: false,
     });
+    let localStObj = {
+      name: note.name,
+      data: note.data,
+      id: note.id,
+    };
+    localStorage.setItem(`Note ${note.id}`, JSON.stringify(localStObj));
   };
 
   onNoteUpdate = (noteToUpdate) => {
     let newNotesArray = [];
 
-    for (let note of this.state.notesArray) {
-      if (note.id === noteToUpdate.id) {
+    for (let i = 0; i < this.state.notesArray.length; i++) {
+      if (this.state.notesArray[i].id === noteToUpdate.id) {
         newNotesArray.push(noteToUpdate);
       } else {
-        newNotesArray.push(note);
+        newNotesArray.push(this.state.notesArray[i]);
       }
     }
+    let localStObj = {
+      name: noteToUpdate.name,
+      data: noteToUpdate.data,
+      id: noteToUpdate.id,
+    };
+    localStorage.setItem(`Note ${noteToUpdate.id}`, JSON.stringify(localStObj));
+
     this.setState({ notesArray: newNotesArray });
   };
 
   onNoteDelete = (noteIdToDelete) => {
+    Object.keys(localStorage).forEach((note) => {
+      let retrievedLocalStObj = localStorage.getItem(note);
+      let parsedLocalStObj = JSON.parse(retrievedLocalStObj);
+
+      if (noteIdToDelete === parsedLocalStObj.id) {
+        localStorage.removeItem(note);
+      }
+    });
     const newNotesArray = this.state.notesArray.filter((note) => {
       return note.id !== noteIdToDelete;
     });

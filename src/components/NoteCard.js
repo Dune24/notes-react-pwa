@@ -8,22 +8,27 @@ class NoteCard extends React.Component {
       editMode: false,
       name: "",
       data: "",
+      id: 0,
     };
   }
 
   componentDidMount() {
-    this.setState({ name: this.props.name, data: this.props.data });
+    this.setState({
+      name: this.props.name,
+      data: this.props.data,
+      id: this.props.id,
+    });
   }
 
   deleteNote = () => {
-    this.props.onNoteDelete(this.props.id);
+    this.props.onNoteDelete(this.state.id);
   };
 
   updateNote = () => {
     this.props.onNoteUpdate({
       name: this.state.name,
       data: this.state.data,
-      id: this.props.id,
+      id: this.state.id,
       renderNote: true,
     });
     this.setState({ editMode: false });
@@ -60,7 +65,16 @@ class NoteCard extends React.Component {
             <div className="fl f3 mt1" onClick={this.toggleEdit}>
               &#x270E;
             </div>
-            <h2 className="tc">{this.props.name}</h2>
+            <h2
+              className="tc"
+              style={{
+                wordWrap: "break-word",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+              }}
+            >
+              {this.state.name}
+            </h2>
             <p
               style={{
                 wordWrap: "break-word",
@@ -68,7 +82,7 @@ class NoteCard extends React.Component {
                 wordBreak: "break-word",
               }}
             >
-              {this.props.data}
+              {this.state.data}
             </p>
           </>
         ) : (
