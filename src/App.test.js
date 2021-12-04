@@ -1,4 +1,9 @@
+import React from "react";
+import { render, screen } from "@testing-library/react";
 
-test('testing', () => {
-  expect(1).toBe(1);
+import App from "./App";
+
+it("renders app", () => {
+  render(<App />);
+  expect(screen.getByText("Notes")).toBeInTheDocument();
 });
