@@ -9,6 +9,8 @@ class NoteCard extends React.Component {
       name: "",
       data: "",
       id: 0,
+      folder: "--Unsorted--",
+      newFolderEdit: false,
     };
   }
 
@@ -17,6 +19,7 @@ class NoteCard extends React.Component {
       name: this.props.name,
       data: this.props.data,
       id: this.props.id,
+      folder: this.props.folder,
     });
   }
 
@@ -29,9 +32,10 @@ class NoteCard extends React.Component {
       name: this.state.name,
       data: this.state.data,
       id: this.state.id,
+      folder: this.state.folder,
       renderNote: true,
     });
-    this.setState({ editMode: false });
+    this.setState({ editMode: false, newFolderEdit: false });
   };
 
   toggleEdit = () => {
@@ -39,6 +43,12 @@ class NoteCard extends React.Component {
       ...state,
       editMode: !state.editMode,
     }));
+  };
+
+  onAddNewFolder = () => {
+    this.setState({
+      newFolderEdit: true,
+    });
   };
 
   onInputChange = (event) => {
@@ -49,6 +59,9 @@ class NoteCard extends React.Component {
       case "note-data":
         this.setState({ data: event.target.value });
         break;
+      case "note-folder":
+        this.setState({ folder: event.target.value });
+        break;
       default:
         return;
     }
@@ -56,17 +69,17 @@ class NoteCard extends React.Component {
 
   render() {
     return (
-      <div className="bg-light-green br3 pa3 w5 ma4 bw2 dib shadow-5">
+      <div className="bg-light-green br3 pa3 ma3 mw5 w-50 shadow-5">
         {!this.state.editMode ? (
           <>
-            <div className="fr f2" onClick={this.deleteNote}>
+            <div className="fr f2 pointer" onClick={this.deleteNote}>
               &times;
             </div>
-            <div className="fl f3 mt1" onClick={this.toggleEdit}>
+            <div className="fl f3 mt1 pointer" onClick={this.toggleEdit}>
               &#x270E;
             </div>
             <h2
-              className="tc"
+              className="tc bb pb2"
               style={{
                 wordWrap: "break-word",
                 whiteSpace: "pre-wrap",
@@ -87,7 +100,7 @@ class NoteCard extends React.Component {
           </>
         ) : (
           <div>
-            <label className="mt2 fw6" htmlFor="note-name">
+            <label className="dib mt2 fw6 dib pb2" htmlFor="note-name">
               Name:
             </label>
             <input
@@ -100,7 +113,7 @@ class NoteCard extends React.Component {
               maxLength="75"
               value={this.state.name}
             ></input>
-            <label className="mt2 fw6" htmlFor="note-data">
+            <label className="mt2 fw6 dib pb2" htmlFor="note-data">
               Text:
             </label>
             <textarea
@@ -111,12 +124,46 @@ class NoteCard extends React.Component {
               maxLength="1000"
               value={this.state.data}
             ></textarea>
+            <label className="fw6 dib pt2 pb2 pr2" htmlFor="note-folder">
+              Folder:
+            </label>
+            <select
+              name="note-folder"
+              id="note-folder"
+              onChange={this.onInputChange}
+            >
+              <option value="--Unsorted--">Select folder</option>
+              {this.props.notesFolders.map((folder) => {
+                return (
+                  <option value={folder} key={folder}>
+                    {folder}
+                  </option>
+                );
+              })}
+            </select>
+            <button
+              className="b grow b--black-20 flex center mt2 mb2"
+              onClick={this.onAddNewFolder}
+            >
+              Add new folder
+            </button>
+            {this.state.newFolderEdit && (
+              <input
+                onChange={this.onInputChange}
+                type="text"
+                name="note-folder"
+                className="pa2 ba w-100"
+                placeholder="Folder Name"
+                minLength="3"
+                maxLength="25"
+              ></input>
+            )}
             <div
               className="mt4 flex"
               style={{ justifyContent: "space-evenly" }}
             >
               <button
-                className="b pa2 grow pointer hover-white w-40 bg-light-green b--black-20"
+                className="b pa2 grow pointer hover-white w-40 bg-green b--black-20"
                 onClick={this.updateNote}
               >
                 Save

@@ -8,6 +8,8 @@ class NoteAdd extends React.Component {
       name: "",
       data: "",
       id: 0,
+      folder: "--Unsorted--",
+      newFolderEdit: false,
     };
   }
 
@@ -29,6 +31,12 @@ class NoteAdd extends React.Component {
     return largestNum;
   };
 
+  onAddNewFolder = () => {
+    this.setState({
+      newFolderEdit: true,
+    });
+  };
+
   onInputChange = (event) => {
     switch (event.target.name) {
       case "note-name":
@@ -36,6 +44,9 @@ class NoteAdd extends React.Component {
         break;
       case "note-data":
         this.setState({ data: event.target.value });
+        break;
+      case "note-folder":
+        this.setState({ folder: event.target.value });
         break;
       default:
         return;
@@ -47,6 +58,7 @@ class NoteAdd extends React.Component {
       name: this.state.name,
       data: this.state.data,
       id: this.state.id,
+      folder: this.state.folder,
       renderNote: true,
     });
     this.setState({ id: this.state.id + 1 });
@@ -56,14 +68,14 @@ class NoteAdd extends React.Component {
     const { toggleModal } = this.props;
     return (
       <div className="note-modal">
-        <article className="br3 ba bg-white b--black-10 w-100 w-75-m mw7 shadow-5 center">
+        <article className="br3 ba bg-white b--black-10 w-100 w-75-m mw7 shadow-5 center ">
           <div className="modal-close fr pr2" onClick={toggleModal}>
             &times;
           </div>
           <main className="pa4 black-80 w-100">
             <h1>Add note</h1>
             <hr />
-            <label className="mt2 fw6" htmlFor="note-name">
+            <label className="fw6 dib pt2 pb2" htmlFor="note-name">
               Name:
             </label>
             <input
@@ -75,7 +87,7 @@ class NoteAdd extends React.Component {
               minLength="4"
               maxLength="75"
             ></input>
-            <label className="mt2 fw6" htmlFor="note-data">
+            <label className="fw6 dib pt2 pb2" htmlFor="note-data">
               Text:
             </label>
             <textarea
@@ -85,6 +97,39 @@ class NoteAdd extends React.Component {
               placeholder="Enter text (max 1000 char.)"
               maxLength="1000"
             ></textarea>
+            <label className="fw6 dib pt2 pb2 pr2" htmlFor="note-folder">
+              Folder:
+            </label>
+            <select
+              name="note-folder"
+              id="note-folder"
+              onChange={this.onInputChange}
+            >
+              {this.props.notesFolders.map((folder) => {
+                return (
+                  <option value={folder} key={folder}>
+                    {folder}
+                  </option>
+                );
+              })}
+            </select>
+            <button
+              className="b grow ma2 bg-light-green b--black-20"
+              onClick={this.onAddNewFolder}
+            >
+              Add new folder
+            </button>
+            {this.state.newFolderEdit && (
+              <input
+                onChange={this.onInputChange}
+                type="text"
+                name="note-folder"
+                className="pa2 ba w-100"
+                placeholder="Folder Name"
+                minLength="3"
+                maxLength="30"
+              ></input>
+            )}
             <div
               className="mt4 flex"
               style={{ justifyContent: "space-evenly" }}
